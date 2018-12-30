@@ -70,7 +70,7 @@ class BestCheckpointCopier(tf.estimator.Exporter):
     return float(eval_result[self.score_metric])
 
   def _shouldKeep(self, checkpoint):
-    return len(self.checkpoints) < self.checkpoints_to_keep or self.compare_fn(checkpoint, self.checkpoints[-1].score)
+    return len(self.checkpoints) < self.checkpoints_to_keep or self.compare_fn(checkpoint, self.checkpoints[-1])
 
   def export(self, estimator, export_path, checkpoint_path, eval_result, is_the_final_export):
     self._log('export checkpoint {}'.format(checkpoint_path))
