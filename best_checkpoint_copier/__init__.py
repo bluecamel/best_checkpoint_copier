@@ -22,13 +22,17 @@ class BestCheckpointCopier(tf.estimator.Exporter):
   compare_fn = None
   name = None
   score_metric = None
+  sort_key_fn = None
+  sort_reverse = None
 
-  def __init__(self, name='best_checkpoints', checkpoints_to_keep=5, score_metric='Loss/total_loss', compare_fn=lambda x,y: x.score < y.score):
+  def __init__(self, name='best_checkpoints', checkpoints_to_keep=5, score_metric='Loss/total_loss', compare_fn=lambda x,y: x.score < y.score, sort_key_fn=lambda x: x.score, sort_reverse=False):
     self.checkpoints = []
     self.checkpoints_to_keep = checkpoints_to_keep
     self.compare_fn = compare_fn
     self.name = name
     self.score_metric = score_metric
+    self.sort_key_fn = sort_key_fn
+    self.sort_reverse = sort_reverse
     super(BestCheckpointCopier, self).__init__()
 
   def _copyCheckpoint(self, checkpoint):
@@ -46,7 +50,7 @@ class BestCheckpointCopier(tf.estimator.Exporter):
     self._log('keeping checkpoint {} with score {}'.format(checkpoint.file, checkpoint.score))
 
     self.checkpoints.append(checkpoint)
-    self.checkpoints = sorted(self.checkpoints, key=lambda c: c.score)
+    self.checkpoints = sorted(self.checkpoints, key=self.sort_key_fn, reverse=self.sort_reverse)
 
     self._copyCheckpoint(checkpoint)
 
