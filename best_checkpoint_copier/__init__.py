@@ -55,7 +55,7 @@ class BestCheckpointCopier(tf.estimator.Exporter):
     self._copyCheckpoint(checkpoint)
 
   def _log(self, statement):
-    tf.logging.info('[{}] {}'.format(self.__class__.__name__, statement))
+    tf.compat.v1.logging.info('[{}] {}'.format(self.__class__.__name__, statement))
 
   def _pruneCheckpoints(self, checkpoint):
     destination_dir = self._destinationDir(checkpoint)
